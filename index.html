@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scatter Plot with Brushing and Legends</title>
+    <style>
+    circle.hidden {
+        display: none;
+    }
+    .legend-item {
+        cursor: pointer; /* Changes cursor to a pointer for legends */
+    }
+    .legend-item.inactive text, .legend-item.inactive rect {
+        opacity: 0.3; /* Dims inactive legends */
+    }
+    .legend-container{
+        font-size: 14px;
+    }
+    .legend-container rect {
+        cursor: pointer; /* Ensures rectangles are clickable */
+    }
+    body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    svg {
+        width: 45vw;
+        height: 45vw;
+    }
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+    .list-container {
+        /* flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 50vw;
+        padding: 20px;
+        background-color: #f3f3f3;
+        border-left: 1px solid #ccc;
+        overflow-y: auto; */
+        width: 100%; /* Make the container span the full width */
+        padding: 20px;
+        background-color: #f3f3f3;
+        border-top: 1px solid #ccc; /* Changed to border-top for separation */
+        border-radius: 0px 0px 10px 10px; /* Rounded corners at the bottom */
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow at the top */
+        margin-top: 20px; /* Add spacing from plots */
+    }
+    .list-container h3 {
+        font-size: 18px;
+        color: #444;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    #selected-list {
+        padding: 10px;
+        list-style-type: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        /* max-height: 100%; */
+        max-height: 200px; /* Add a fixed height with scroll */
+        overflow-y: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* flex-grow: 1; */
+        width: 100%; /* Make the list span the full container width */
+    }
+    #selected-list li {
+        padding: 10px;
+        margin: 0;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        color: #555;
+    }
+    #selected-list li:last-child {
+        border-bottom: none;
+    }
+    /* Highlight selected circles in the scatter plot */
+    circle.selected {
+        stroke: black; /* Black border around selected circles */
+        stroke-width: 2px; /* Border width */
+        opacity: 0.8; /* Adjust opacity for better visibility */
+    }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="js/scatterplot.problem_new4.js"></script>
+</head>
+<body>
+<div>
+    <svg viewBox="0 0 1000 1000" id="figure1"></svg>
+    <svg viewBox="0 0 1000 1000" id="figure2"></svg>
+</div>
+<div class="list-container">
+    <h3>Selected Cars</h3>
+    <ul id="selected-list"></ul>
+</div>
+
+<script>
+    // Load the data and create both scatter plots
+    d3.csv("./data/car_sample_data.csv")
+        .then(data => {
+            scatter_plot(
+                data = data,
+                "#figure1",
+                title = "MPG vs Price",
+                xCol = "Price",
+                yCol = "MPG",
+                rCol = "Weight",
+                legend = [...new Set(data.map(d => d.Country))], // Unique countries
+                colorCol = "Country",
+                margin = 150
+            );
+            scatter_plot(
+                data = data,
+                "#figure2",
+                title = "MPG vs Engine Size",
+                xCol = "EngineSizeCI",
+                yCol = "MPG",
+                rCol = "Weight",
+                legend = [...new Set(data.map(d => d.Country))], // Unique countries
+                colorCol = "Country",
+                margin = 150
+            );
+        });
+</script>
+</body>
+</html>
